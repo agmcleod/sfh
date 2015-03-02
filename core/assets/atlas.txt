@@ -1,0 +1,81 @@
+atlas.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+blackthing
+  rotate: false
+  xy: 456, 903
+  size: 252, 64
+  orig: 256, 64
+  offset: 4, 0
+  index: -1
+dodge
+  rotate: false
+  xy: 964, 2
+  size: 30, 32
+  orig: 32, 32
+  offset: 2, 0
+  index: -1
+dodgemessageone
+  rotate: false
+  xy: 304, 644
+  size: 300, 170
+  orig: 300, 170
+  offset: 0, 0
+  index: -1
+dodgemessagethree
+  rotate: false
+  xy: 2, 816
+  size: 300, 170
+  orig: 300, 170
+  offset: 0, 0
+  index: -1
+dodgemessagetwo
+  rotate: false
+  xy: 2, 644
+  size: 300, 170
+  orig: 300, 170
+  offset: 0, 0
+  index: -1
+end
+  rotate: false
+  xy: 2, 2
+  size: 960, 640
+  orig: 960, 640
+  offset: 0, 0
+  index: -1
+greenthing
+  rotate: false
+  xy: 2, 988
+  size: 126, 32
+  orig: 128, 32
+  offset: 1, 0
+  index: -1
+messageone
+  rotate: false
+  xy: 430, 816
+  size: 150, 85
+  orig: 150, 85
+  offset: 0, 0
+  index: -1
+messagetwo
+  rotate: false
+  xy: 304, 914
+  size: 150, 85
+  orig: 150, 85
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 304, 816
+  size: 124, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+redthing
+  rotate: false
+  xy: 130, 988
+  size: 112, 30
+  orig: 128, 32
+  offset: 3, 0
+  index: -1
