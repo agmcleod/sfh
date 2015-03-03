@@ -15,12 +15,16 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.ObjectMap;
+
+import java.lang.reflect.Constructor;
 
 public class Game extends ApplicationAdapter {
     static final float WORLD_TO_BOX = 0.01f;
     static final float BOX_TO_WORLD = 100f;
     World world;
 
+    private ObjectMap<String, String> entities;
     private OrthographicCamera camera;
     private Matrix4 cameraCpy;
     private SpriteBatch batch;
@@ -37,7 +41,6 @@ public class Game extends ApplicationAdapter {
         atlas = new TextureAtlas("atlas.txt");
         world = new World(new Vector2(0, 0), true);
 
-        player = new Player(this);
         debugRenderer = new Box2DDebugRenderer();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -45,6 +48,31 @@ public class Game extends ApplicationAdapter {
 
         TiledMap map = new TmxMapLoader().load("intro.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
+
+        entities = new ObjectMap<String, String>();
+        entities.put("player", "com.agmcleod.sfh.Player");
+
+        try {
+            Class<?> playerClass = Class.forName(entities.get("player"));
+            Constructor<?> constructor = playerClass.getConstructor(Game.class);
+            player = (Player) constructor.newInstance(this);
+        }
+        catch (java.lang.ClassNotFoundException e) {
+            System.out.println("not found");
+        }
+        catch (java.lang.InstantiationException e) {
+            System.out.println("Instantiation exception");
+        }
+        catch (java.lang.IllegalAccessException e) {
+            System.out.println("Illegal access");
+        }
+        catch (java.lang.NoSuchMethodException e) {
+            System.out.println("No such method");
+        }
+        catch (java.lang.reflect.InvocationTargetException e) {
+            System.out.println("Could not invoke");
+        }
+
     }
 
     @Override
