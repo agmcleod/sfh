@@ -39,7 +39,7 @@ public class Game extends ApplicationAdapter {
     public void create () {
         batch = new SpriteBatch();
         atlas = new TextureAtlas("atlas.txt");
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(0, -5), true);
 
         debugRenderer = new Box2DDebugRenderer();
         camera = new OrthographicCamera();
@@ -48,6 +48,8 @@ public class Game extends ApplicationAdapter {
 
         TiledMap map = new TmxMapLoader().load("intro.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
+
+        MapBodyBuilder.buildShapes(map, world);
 
         entities = new ObjectMap<String, String>();
         entities.put("player", "com.agmcleod.sfh.Player");

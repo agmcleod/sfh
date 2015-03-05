@@ -50,8 +50,8 @@ public class Player {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = playerShape;
         fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
+        fixtureDef.friction = 0f;
+        fixtureDef.restitution = 0f;
 
         Fixture fixture = playerBody.createFixture(fixtureDef);
 
@@ -79,13 +79,13 @@ public class Player {
         stateTime += Gdx.graphics.getDeltaTime();
 
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            playerBody.setLinearVelocity(-VEL_X, 0);
+            playerBody.setLinearVelocity(-VEL_X, playerBody.getLinearVelocity().y);
             flip = true;
             processAnimation = true;
         }
 
         else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            playerBody.setLinearVelocity(VEL_X, 0);
+            playerBody.setLinearVelocity(VEL_X, playerBody.getLinearVelocity().y);
             flip = false;
             processAnimation = true;
         }
@@ -95,7 +95,7 @@ public class Player {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && playerBody.getLinearVelocity().y <= 0) {
-            playerBody.applyForceToCenter(0, 20, false);
+            playerBody.applyForceToCenter(0, 10, false);
         }
 
 

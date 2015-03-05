@@ -14,10 +14,8 @@ import com.badlogic.gdx.utils.Array;
  * Created by aaronmcleod on 15-03-04.
  */
 public class MapBodyBuilder {
-    private static float ppt = 32f;
 
-    public static Array<Body> buildShapes(Map map, float pixels, World world) {
-        ppt = pixels;
+    public static Array<Body> buildShapes(Map map, World world) {
         MapObjects objects = map.getLayers().get("collision").getObjects();
 
         Array<Body> bodies = new Array<Body>();
@@ -48,7 +46,8 @@ public class MapBodyBuilder {
             BodyDef bd = new BodyDef();
             bd.type = BodyDef.BodyType.StaticBody;
             Body body = world.createBody(bd);
-            body.createFixture(shape, 1);
+            Fixture f = body.createFixture(shape, 1);
+            f.setRestitution(0f);
 
             bodies.add(body);
 
@@ -60,10 +59,10 @@ public class MapBodyBuilder {
     private static PolygonShape getRectangle(RectangleMapObject rectangleObject) {
         Rectangle rectangle = rectangleObject.getRectangle();
         PolygonShape polygon = new PolygonShape();
-        Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / ppt,
-                (rectangle.y + rectangle.height * 0.5f ) / ppt);
-        polygon.setAsBox(rectangle.width * 0.5f / ppt,
-                rectangle.height * 0.5f / ppt,
+        Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) * Game.WORLD_TO_BOX,
+                (rectangle.y + rectangle.height * 0.5f ) * Game.WORLD_TO_BOX);
+        polygon.setAsBox((rectangle.width * 0.5f) * Game.WORLD_TO_BOX,
+                (rectangle.height * 0.5f) * Game.WORLD_TO_BOX,
                 size,
                 0.0f);
         return polygon;
@@ -72,8 +71,8 @@ public class MapBodyBuilder {
     private static CircleShape getCircle(CircleMapObject circleObject) {
         Circle circle = circleObject.getCircle();
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(circle.radius / ppt);
-        circleShape.setPosition(new Vector2(circle.x / ppt, circle.y / ppt));
+        circleShape.setRadius(circle.radius * Game.WORLD_TO_BOX);
+        circleShape.setPosition(new Vector2(circle.x * Game.WORLD_TO_BOX, circle.y * Game.WORLD_TO_BOX));
         return circleShape;
     }
 
@@ -85,7 +84,7 @@ public class MapBodyBuilder {
 
         for (int i = 0; i < vertices.length; ++i) {
             System.out.println(vertices[i]);
-            worldVertices[i] = vertices[i] / ppt;
+            worldVertices[i] = vertices[i] * Game.WORLD_TO_BOX;
         }
 
         polygon.set(worldVertices);
@@ -98,8 +97,8 @@ public class MapBodyBuilder {
 
         for (int i = 0; i < vertices.length / 2; ++i) {
             worldVertices[i] = new Vector2();
-            worldVertices[i].x = vertices[i * 2] / ppt;
-            worldVertices[i].y = vertices[i * 2 + 1] / ppt;
+            worldVertices[i].x = vertices[i * 2] * Game.WORLD_TO_BOX;
+            worldVertices[i].y = vertices[i * 2 + 1] * Game.WORLD_TO_BOX;
         }
 
         ChainShape chain = new ChainShape();
