@@ -30,6 +30,8 @@ public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
     private Box2DDebugRenderer debugRenderer;
 
+    private FollowCamera followCamera;
+
     private OrthogonalTiledMapRenderer mapRenderer;
 
     private Player player;
@@ -75,6 +77,7 @@ public class Game extends ApplicationAdapter {
             System.out.println("Could not invoke");
         }
 
+        followCamera = new FollowCamera(camera, player.getPosition(), mapRenderer.getViewBounds());
     }
 
     @Override
@@ -92,6 +95,9 @@ public class Game extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mapRenderer.render();
+
+        batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
         player.render(batch);
         batch.end();
@@ -101,7 +107,7 @@ public class Game extends ApplicationAdapter {
 
     public void update() {
         player.update();
-
+        followCamera.update();
         camera.update();
         mapRenderer.setView(camera);
     }

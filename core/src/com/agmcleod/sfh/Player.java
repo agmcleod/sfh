@@ -22,14 +22,14 @@ public class Player {
     private float stateTime;
     private Animation walkAnimation;
     private TextureRegion[] walkFrames;
-    private Vector2 pos;
+    private Vector2 position;
     private boolean processAnimation;
     private boolean flip;
 
     public Player(Game game) {
         TextureAtlas.AtlasRegion region = game.atlas.findRegion("player");
         TextureRegion[][] tmp = region.split(region.getRegionWidth() / FRAME_COLS, region.getRegionHeight() / FRAME_ROWS);
-        pos = new Vector2(50, 50);
+        position = new Vector2(50, 50);
         walkFrames = new TextureRegion[]{
                 tmp[0][0], tmp[0][1], tmp[0][2], tmp[0][3],
                 tmp[1][0], tmp[1][1], tmp[1][2], tmp[1][3],
@@ -41,7 +41,7 @@ public class Player {
 
         playerDef = new BodyDef();
         playerDef.type = BodyDef.BodyType.DynamicBody;
-        playerDef.position.set((pos.x + 16) * Game.WORLD_TO_BOX, (pos.y + 16) * Game.WORLD_TO_BOX);
+        playerDef.position.set((position.x + 16) * Game.WORLD_TO_BOX, (position.y + 16) * Game.WORLD_TO_BOX);
         playerBody = game.world.createBody(playerDef);
 
         PolygonShape playerShape = new PolygonShape();
@@ -58,6 +58,10 @@ public class Player {
         playerShape.dispose();
     }
 
+    public Vector2 getPosition() {
+        return this.position;
+    }
+
     public void render(SpriteBatch batch) {
         TextureRegion region;
         if (processAnimation) {
@@ -68,10 +72,10 @@ public class Player {
         }
 
         if (flip) {
-            batch.draw(region, pos.x, pos.y, -32, 32);
+            batch.draw(region, position.x, position.y, -32, 32);
         }
         else {
-            batch.draw(region, pos.x - 32, pos.y, 32, 32);
+            batch.draw(region, position.x - 32, position.y, 32, 32);
         }
     }
 
@@ -99,7 +103,7 @@ public class Player {
         }
 
 
-        pos.set(playerBody.getPosition().x * Game.BOX_TO_WORLD + 16, playerBody.getPosition().y * Game.BOX_TO_WORLD - 16);
+        position.set(playerBody.getPosition().x * Game.BOX_TO_WORLD + 16, playerBody.getPosition().y * Game.BOX_TO_WORLD - 16);
     }
 
 
