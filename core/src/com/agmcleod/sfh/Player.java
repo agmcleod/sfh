@@ -26,7 +26,7 @@ public class Player {
     private boolean processAnimation;
     private boolean flip;
 
-    public Player(Game game) {
+    public Player(Game game, float x, float y) {
         TextureAtlas.AtlasRegion region = game.atlas.findRegion("player");
         TextureRegion[][] tmp = region.split(region.getRegionWidth() / FRAME_COLS, region.getRegionHeight() / FRAME_ROWS);
         position = new Vector2(50, 50);

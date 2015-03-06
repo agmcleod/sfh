@@ -56,26 +56,7 @@ public class Game extends ApplicationAdapter {
         entities = new ObjectMap<String, String>();
         entities.put("player", "com.agmcleod.sfh.Player");
 
-        try {
-            Class<?> playerClass = Class.forName(entities.get("player"));
-            Constructor<?> constructor = playerClass.getConstructor(Game.class);
-            player = (Player) constructor.newInstance(this);
-        }
-        catch (java.lang.ClassNotFoundException e) {
-            System.out.println("not found");
-        }
-        catch (java.lang.InstantiationException e) {
-            System.out.println("Instantiation exception");
-        }
-        catch (java.lang.IllegalAccessException e) {
-            System.out.println("Illegal access");
-        }
-        catch (java.lang.NoSuchMethodException e) {
-            System.out.println("No such method");
-        }
-        catch (java.lang.reflect.InvocationTargetException e) {
-            System.out.println("Could not invoke");
-        }
+        player = (Player) ObjectMapToClass.getInstanceOfObject(entities, "player", this);
 
         followCamera = new FollowCamera(camera, player.getPosition(), mapRenderer.getViewBounds());
     }
