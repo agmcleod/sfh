@@ -45,6 +45,8 @@ public class Game extends ApplicationAdapter {
         atlas = new TextureAtlas("atlas.txt");
         world = new World(new Vector2(0, -5), true);
 
+        world.setContactListener(new CollisionListener());
+
         debugRenderer = new Box2DDebugRenderer();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

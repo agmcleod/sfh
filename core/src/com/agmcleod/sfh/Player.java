@@ -55,6 +55,7 @@ public class Player {
         fixtureDef.restitution = 0f;
 
         Fixture fixture = playerBody.createFixture(fixtureDef);
+        fixture.setUserData("player");
 
         playerShape.dispose();
     }
