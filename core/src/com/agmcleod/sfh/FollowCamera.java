@@ -20,25 +20,25 @@ public class FollowCamera {
         this.camera = camera;
         this.totalViewBounds = totalViewBounds;
         setDeadzone(this.camera.viewportWidth / 6, this.camera.viewportHeight / 6);
+        System.out.println(camera.position.x + "," + camera.position.y);
     }
 
     public void followH(Vector2 target) {
         Camera cam = this.camera;
-        float _x = cam.position.x;
-        if ((target.x - cam.position.x) > (deadzone.x + deadzone.width)) {
+        if ((target.x - cam.position.x - camera.viewportWidth / 2) > (deadzone.x + deadzone.width)) {
             cam.position.x = (float) Math.floor(Math.min((target.x) - (deadzone.x + deadzone.width), totalViewBounds.width - camera.viewportWidth));
         }
-        else if ((target.x - cam.position.x) < (deadzone.x)) {
+        else if ((target.x - cam.position.x - camera.viewportWidth / 2) < (deadzone.x)) {
             cam.position.x = (float) Math.floor(Math.max((target.x) - deadzone.x, camera.position.x));
         }
     }
 
     public void followV(Vector2 target) {
         Camera cam = this.camera;
-        if ((target.y - cam.position.y) > (deadzone.y + deadzone.height)) {
+        if ((target.y - cam.position.y - cam.viewportHeight / 2) > (deadzone.y + deadzone.height)) {
             cam.position.y = (float) Math.floor(Math.min((target.y) - (deadzone.y + deadzone.height), totalViewBounds.height - camera.viewportHeight));
         }
-        else if ((target.y - cam.position.y) < (deadzone.y)) {
+        else if ((target.y - cam.position.y - cam.viewportHeight / 2) < (deadzone.y)) {
             cam.position.y = (float) Math.floor(Math.max((target.y) - this.deadzone.y, cam.position.y));
         }
     }

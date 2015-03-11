@@ -43,6 +43,7 @@ public class Player {
         playerDef.type = BodyDef.BodyType.DynamicBody;
         playerDef.position.set((position.x + 16) * Game.WORLD_TO_BOX, (position.y + 16) * Game.WORLD_TO_BOX);
         playerBody = game.world.createBody(playerDef);
+        playerBody.setFixedRotation(true);
 
         PolygonShape playerShape = new PolygonShape();
         playerShape.setAsBox(16 * Game.WORLD_TO_BOX, 16 * Game.WORLD_TO_BOX);

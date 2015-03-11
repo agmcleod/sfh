@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -56,9 +58,17 @@ public class Game extends ApplicationAdapter {
         entities = new ObjectMap<String, String>();
         entities.put("player", "com.agmcleod.sfh.Player");
 
-        player = (Player) ObjectMapToClass.getInstanceOfObject(entities, "player", this);
+        MapProperties properties = map.getProperties();
+        int width = properties.get("width", Integer.class);
+        int height = properties.get("height", Integer.class);
 
-        followCamera = new FollowCamera(camera, player.getPosition(), mapRenderer.getViewBounds());
+        int tileWidth = properties.get("tilewidth", Integer.class);
+        int tileHeight = properties.get("tileheight", Integer.class);
+
+        Rectangle mapBounds = new Rectangle(0, 0, width * tileWidth, height * tileHeight);
+
+        player = (Player) ObjectMapToClass.getInstanceOfObject(entities, "player", this);
+        followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
     }
 
     @Override
