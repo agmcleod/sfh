@@ -6,6 +6,12 @@ import com.badlogic.gdx.physics.box2d.*;
  * Created by aaronmcleod on 15-03-10.
  */
 public class CollisionListener implements ContactListener {
+
+    public CollisionListener() {
+        super();
+
+    }
+
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
     }
@@ -26,17 +32,19 @@ public class CollisionListener implements ContactListener {
         Fixture fixtureB = contact.getFixtureB();
 
         if(fixtureA.getUserData() != null
-                && fixtureA.getUserData().equals("player")
+                && ((GameObject) fixtureA.getUserData()).name.equals("player")
                 && fixtureB.getUserData() != null
-                && fixtureB.getUserData().equals("mapCollision")) {
-
+                && ((GameObject) fixtureB.getUserData()).name.equals("mapCollision")) {
+            Player player = ((Player) fixtureA.getUserData());
+            player.setJumping(false);
         }
 
-        if(fixtureB.getUserData() != null
-                && fixtureB.getUserData().equals("player")
-                && fixtureA.getUserData() != null
-                && fixtureA.getUserData().equals("mapCollision")){
-
+        if(fixtureA.getUserData() != null
+                && ((GameObject) fixtureA.getUserData()).name.equals("mapCollision")
+                && fixtureB.getUserData() != null
+                && ((GameObject) fixtureB.getUserData()).name.equals("player")) {
+            Player player = ((Player) fixtureB.getUserData());
+            player.setJumping(false);
         }
     }
 }

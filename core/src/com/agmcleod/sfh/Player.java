@@ -11,22 +11,24 @@ import com.badlogic.gdx.physics.box2d.*;
 /**
  * Created by aaronmcleod on 15-02-27.
  */
-public class Player {
+public class Player extends GameObject {
     private static final int FRAME_COLS = 4;
     private static final int FRAME_ROWS = 3;
     private static final float VEL_X = 3;
 
+    private boolean flip;
+    private boolean jumping;
     private BodyDef playerDef;
     private Body playerBody;
-
+    private Vector2 position;
+    private boolean processAnimation;
     private float stateTime;
     private Animation walkAnimation;
     private TextureRegion[] walkFrames;
-    private Vector2 position;
-    private boolean processAnimation;
-    private boolean flip;
+
 
     public Player(Game game, float x, float y) {
+        super("player");
         TextureAtlas.AtlasRegion region = game.atlas.findRegion("player");
         TextureRegion[][] tmp = region.split(region.getRegionWidth() / FRAME_COLS, region.getRegionHeight() / FRAME_ROWS);
         position = new Vector2(50, 50);
@@ -55,7 +57,7 @@ public class Player {
         fixtureDef.restitution = 0f;
 
         Fixture fixture = playerBody.createFixture(fixtureDef);
-        fixture.setUserData("player");
+        fixture.setUserData(this);
 
         playerShape.dispose();
     }
@@ -81,6 +83,10 @@ public class Player {
         }
     }
 
+    public void setJumping(boolean value) {
+        jumping = value;
+    }
+
     public void update() {
         stateTime += Gdx.graphics.getDeltaTime();
 
@@ -100,8 +106,9 @@ public class Player {
             processAnimation = false;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && playerBody.getLinearVelocity().y <= 0) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && !jumping) {
             playerBody.applyForceToCenter(0, 10, false);
+            jumping = true;
         }
 
 
