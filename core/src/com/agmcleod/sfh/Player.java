@@ -17,6 +17,7 @@ public class Player extends GameObject {
     private static final float VEL_X = 3;
 
     private boolean flip;
+    private Game game;
     private boolean jumping;
     private BodyDef playerDef;
     private Body playerBody;
@@ -29,6 +30,7 @@ public class Player extends GameObject {
 
     public Player(Game game, float x, float y) {
         super("player");
+        this.game = game;
         TextureAtlas.AtlasRegion region = game.atlas.findRegion("player");
         TextureRegion[][] tmp = region.split(region.getRegionWidth() / FRAME_COLS, region.getRegionHeight() / FRAME_ROWS);
         position = new Vector2(50, 50);
@@ -43,12 +45,12 @@ public class Player extends GameObject {
 
         playerDef = new BodyDef();
         playerDef.type = BodyDef.BodyType.DynamicBody;
-        playerDef.position.set((position.x + 16) * Game.WORLD_TO_BOX, (position.y + 16) * Game.WORLD_TO_BOX);
+        playerDef.position.set((position.x + 16) * game.WORLD_TO_BOX, (position.y + 16) * game.WORLD_TO_BOX);
         playerBody = game.world.createBody(playerDef);
         playerBody.setFixedRotation(true);
 
         PolygonShape playerShape = new PolygonShape();
-        playerShape.setAsBox(16 * Game.WORLD_TO_BOX, 16 * Game.WORLD_TO_BOX);
+        playerShape.setAsBox(16 * game.WORLD_TO_BOX, 16 * game.WORLD_TO_BOX);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = playerShape;
@@ -112,7 +114,7 @@ public class Player extends GameObject {
         }
 
 
-        position.set(playerBody.getPosition().x * Game.BOX_TO_WORLD + 16, playerBody.getPosition().y * Game.BOX_TO_WORLD - 16);
+        position.set(playerBody.getPosition().x * game.BOX_TO_WORLD + 16, playerBody.getPosition().y * game.BOX_TO_WORLD - 16);
     }
 
 

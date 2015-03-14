@@ -22,8 +22,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import java.lang.reflect.Constructor;
 
 public class Game extends ApplicationAdapter {
-    static final float WORLD_TO_BOX = 0.01f;
-    static final float BOX_TO_WORLD = 100f;
+    final float WORLD_TO_BOX = 0.01f;
+    final float BOX_TO_WORLD = 100f;
     World world;
 
     private ObjectMap<String, String> entities;
