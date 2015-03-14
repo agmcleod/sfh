@@ -12,9 +12,10 @@ import com.badlogic.gdx.physics.box2d.*;
  * Created by aaronmcleod on 15-02-27.
  */
 public class Player extends GameObject {
-    private static final int FRAME_COLS = 4;
-    private static final int FRAME_ROWS = 3;
-    private static final float VEL_X = 3;
+    private final int FRAME_COLS = 4;
+    private final int FRAME_ROWS = 3;
+    private final float VEL_X = 3;
+    private final float JUMP_HEIGHT = 1f;
 
     private boolean flip;
     private Game game;

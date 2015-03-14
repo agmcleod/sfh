@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
@@ -24,12 +26,15 @@ import java.lang.reflect.Constructor;
 public class Game extends ApplicationAdapter {
     final float WORLD_TO_BOX = 0.01f;
     final float BOX_TO_WORLD = 100f;
+    final float VIRTUAL_HEIGHT = 5f; // 5 meters
     World world;
 
     private ObjectMap<String, String> entities;
     private OrthographicCamera camera;
     private Matrix4 cameraCpy;
+    private Texture backgroundImage;
     private SpriteBatch batch;
+    private MapBodyBuilder bodyBuilder;
     private Box2DDebugRenderer debugRenderer;
 
     private FollowCamera followCamera;
@@ -43,7 +48,7 @@ public class Game extends ApplicationAdapter {
     public void create () {
         batch = new SpriteBatch();
         atlas = new TextureAtlas("atlas.txt");
-        world = new World(new Vector2(0, -5), true);
+        world = new World(new Vector2(0, -9.81f), true); // use earth gravity.
 
         world.setContactListener(new CollisionListener());
 
@@ -52,10 +57,23 @@ public class Game extends ApplicationAdapter {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraCpy = camera.combined.cpy();
 
-        TiledMap map = new TmxMapLoader().load("intro.tmx");
+        bodyBuilder = new MapBodyBuilder(this, world);
+
+        loadLevel("intro.tmx");
+    }
+
+    @Override
+    public void dispose() {
+        mapRenderer.dispose();
+        atlas.dispose();
+    }
+
+    public void loadLevel(String name) {
+        TiledMap map = new TmxMapLoader().load(name);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
 
-        MapBodyBuilder.buildShapes(map, world);
+
+        bodyBuilder.buildShapes(map, world);
 
         entities = new ObjectMap<String, String>();
         entities.put("player", "com.agmcleod.sfh.Player");
@@ -71,12 +89,6 @@ public class Game extends ApplicationAdapter {
 
         player = (Player) ObjectMapToClass.getInstanceOfObject(entities, "player", this);
         followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
-    }
-
-    @Override
-    public void dispose() {
-        mapRenderer.dispose();
-        atlas.dispose();
     }
 
     @Override
