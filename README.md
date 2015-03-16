@@ -1,0 +1,1 @@
+This is a sort of java clone of my html5 game a search for hope. Not planning to finish the full game, but just exploring how to build out collision objects from tiled. How to load entities, doing some basic pooling, etc.
