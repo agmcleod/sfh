@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
@@ -22,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import java.lang.reflect.Constructor;
+import java.util.Iterator;
 
 public class Game extends ApplicationAdapter {
     final float WORLD_TO_BOX = 0.01f;
@@ -32,13 +35,14 @@ public class Game extends ApplicationAdapter {
     private ObjectMap<String, String> entities;
     private OrthographicCamera camera;
     private Matrix4 cameraCpy;
-    private Texture backgroundImage;
+    private TextureRegion backgroundImage;
     private SpriteBatch batch;
     private MapBodyBuilder bodyBuilder;
     private Box2DDebugRenderer debugRenderer;
 
     private FollowCamera followCamera;
 
+    private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     private Player player;
@@ -69,10 +73,8 @@ public class Game extends ApplicationAdapter {
     }
 
     public void loadLevel(String name) {
-        TiledMap map = new TmxMapLoader().load(name);
+        map = new TmxMapLoader().load(name);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
-
-
         bodyBuilder.buildShapes(map, world);
 
         entities = new ObjectMap<String, String>();
@@ -89,25 +91,48 @@ public class Game extends ApplicationAdapter {
 
         player = (Player) ObjectMapToClass.getInstanceOfObject(entities, "player", this);
         followCamera = new FollowCamera(camera, player.getPosition(), mapBounds);
+
+        TiledMapImageLayer background = (TiledMapImageLayer) map.getLayers().get("background");
+        backgroundImage = background.getTextureRegion();
     }
 
     @Override
-    public void render () {
+    public void render() {
         update();
 
         cameraCpy.set(camera.combined);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        mapRenderer.render();
 
         batch.setProjectionMatrix(camera.combined);
 
+        batch.begin();
+        batch.draw(backgroundImage, (camera.position.x - camera.viewportWidth / 2) * 0.7f, (camera.position.y - camera.viewportHeight / 2) * 0.7f);
+        batch.end();
+
+        renderMap();
         batch.begin();
         player.render(batch);
         batch.end();
         debugRenderer.render(world, cameraCpy.scl(BOX_TO_WORLD));
         world.step(1 / 60f, 6, 2);
+    }
+
+    public void renderMap() {
+        TiledMapImageLayer imageLayer = (TiledMapImageLayer) map.getLayers().get("background");
+        mapRenderer.getBatch().begin();
+
+        for (MapLayer layer : map.getLayers()) {
+            if (layer.isVisible() && !layer.getName().equals("collision")) {
+                if (layer instanceof TiledMapTileLayer) {
+                    mapRenderer.renderTileLayer((TiledMapTileLayer) layer);
+                } else {
+                    mapRenderer.renderObjects(layer);
+                }
+            }
+        }
+        mapRenderer.getBatch().end();
     }
 
     public void update() {

@@ -20,7 +20,6 @@ public class FollowCamera {
         this.camera = camera;
         this.totalViewBounds = totalViewBounds;
         setDeadzone(this.camera.viewportWidth / 6, this.camera.viewportHeight / 6);
-        System.out.println(camera.position.x + "," + camera.position.y);
     }
 
     public void followH(Vector2 target) {
